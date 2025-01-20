@@ -7,6 +7,66 @@ import sys
 from sklearn.metrics import mean_squared_error, accuracy_score, precision_score, recall_score, f1_score
 import pandas as pd
 
+test_cases = {
+    "LinearRegression": {
+        "type": "regression",
+        "datasets": [
+        {
+            "name": "simple_line",
+            "points": 20,
+            "max_mse": 0.1,
+            "X_train": [[1], [2], [3], [4], [5]],
+            "y_train": [2, 4, 6, 8, 10],
+            "X_test": [[6], [7], [8]],
+            "y_test": [12, 14, 16]
+        },
+        {
+            "name": "multiple_features",
+            "points": 30,
+            "max_mse": 0.5,
+            "X_train": [
+            [1, 0.5], [2, 1.0], [3, 1.5],
+            [4, 2.0], [5, 2.5]
+            ],
+            "y_train": [3, 6, 9, 12, 15],
+            "X_test": [[6, 3.0], [7, 3.5], [8, 4.0]],
+            "y_test": [18, 21, 24]
+        }
+        ]
+    },
+    "LogisticRegression": {
+        "type": "classification",
+        "datasets": [
+        {
+            "name": "binary_classification",
+            "points": 25,
+            "min_accuracy": 0.9,
+            "X_train": [
+            [1, 1], [2, 2], [2, 1], [3, 3],
+            [1, 2], [4, 4], [5, 5]
+            ],
+            "y_train": [0, 0, 0, 1, 0, 1, 1],
+            "X_test": [[3, 2], [4, 3], [5, 4]],
+            "y_test": [1, 1, 1]
+        },
+        {
+            "name": "multifeature_binary",
+            "points": 25,
+            "min_accuracy": 0.8,
+            "X_train": [
+            [1, 1, 1], [2, 2, 1], [2, 1, 2],
+            [3, 3, 1], [1, 2, 3], [4, 4, 2],
+            [5, 5, 1]
+            ],
+            "y_train": [0, 0, 0, 1, 0, 1, 1],
+            "X_test": [[3, 2, 2], [4, 3, 1], [5, 4, 2]],
+            "y_test": [1, 1, 1]
+        }
+        ]
+    }
+}
+
+
 class MLGradingError(Exception):
     pass
 
@@ -27,11 +87,6 @@ def grade_assignment(
         Dict containing total_score, max_score, and detailed feedback
     """
     try:
-        # Read test cases from the working directory
-        test_file = working_dir / 'test_cases.json'
-        with open(test_file) as f:
-            test_cases = json.load(f)['test_cases']
-        
         # Import student's submission from the working directory
         student_file = working_dir / 'implementation.py'
         spec = importlib.util.spec_from_file_location(
