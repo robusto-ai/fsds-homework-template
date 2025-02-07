@@ -1,59 +1,47 @@
 {
     "test_cases": {
       "sigmoid": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
+            "name": "sigmoid_test_0",
+            "points": 10,
             "input": [0],
-            "output": 0.5,
-            "points": 10
+            "expected_output": 0.5
           },
           {
+            "name": "sigmoid_test_2",
+            "points": 10,
             "input": [2],
-            "output": 0.8807970779778823,
-            "points": 10
-          },
-          {
-            "input": [-2],
-            "output": 0.11920292202211755,
-            "points": 10
+            "expected_output": 0.8807970779778823
           }
         ]
       },
       "binary_cross_entropy": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
-            "input": [[1, 0], [0.9, 0.1]],
-            "output": 0.10536051565782628,
-            "points": 10
-          },
-          {
-            "input": [[1, 1], [0.8, 0.7]],
-            "output": 0.24116205681688812,
-            "points": 10
-          },
-          {
-            "input": [[0, 0], [0.3, 0.4]],
-            "output": 0.4581453659370776,
-            "points": 10
+            "name": "binary_cross_entropy_test",
+            "points": 10,
+            "input": {
+              "y_true": [1, 0, 1],
+              "y_pred": [0.9, 0.1, 0.8]
+            },
+            "expected_output": 0.164252033486018
           }
         ]
       },
       "confusion_matrix": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
-            "input": [[1, 0, 1, 0], [1, 0, 0, 1]],
-            "output": {"TP": 1, "TN": 1, "FP": 1, "FN": 1},
-            "points": 10
-          },
-          {
-            "input": [[1, 1, 1], [1, 1, 1]],
-            "output": {"TP": 3, "TN": 0, "FP": 0, "FN": 0},
-            "points": 10
-          },
-          {
-            "input": [[0, 0, 0], [1, 1, 1]],
-            "output": {"TP": 0, "TN": 0, "FP": 3, "FN": 0},
-            "points": 10
+            "name": "confusion_matrix_test",
+            "points": 10,
+            "input": {
+              "y_true": [1, 0, 1, 0],
+              "y_pred": [1, 0, 0, 1]
+            },
+            "expected_output": {"TP": 1, "TN": 1, "FP": 1, "FN": 1}
           }
         ]
       }

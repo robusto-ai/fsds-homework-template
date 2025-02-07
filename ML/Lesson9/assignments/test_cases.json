@@ -1,59 +1,72 @@
 {
+    "max_score": 100,
     "test_cases": {
       "bagging_aggregation": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
-            "input": [[[1, 0, 1], [1, 1, 1], [0, 0, 1]]],
-            "output": [1, 0, 1],
-            "points": 10
+            "name": "bagging_aggregation_test_1",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0, 1], [1, 1, 1], [0, 0, 1]]
+            },
+            "expected_output": [1, 0, 1]
           },
           {
-            "input": [[[1, 0], [0, 1], [1, 0]]],
-            "output": [1, 0],
-            "points": 10
-          },
-          {
-            "input": [[[1, 1, 1]]],
-            "output": [1, 1, 1],
-            "points": 10
+            "name": "bagging_aggregation_test_2",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0], [0, 1], [1, 0]]
+            },
+            "expected_output": [1, 0]
           }
         ]
       },
       "update_weights": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
-            "input": [[0.2, 0.3, 0.5], [1, 0, 1], [1, 1, 0]],
-            "output": [0.2, 0.6, 1.0],
-            "points": 10
+            "name": "update_weights_test_1",
+            "points": 10,
+            "input": {
+              "weights": [0.2, 0.3, 0.5],
+              "predictions": [1, 0, 1],
+              "labels": [1, 0, 1]
+            },
+            "expected_output": [0.2, 0.3, 0.5]
           },
           {
-            "input": [[0.2, 0.3, 0.5], [1, 1, 0], [1, 1, 0]],
-            "output": [0.2, 0.3, 0.5],
-            "points": 10
-          },
-          {
-            "input": [[0.2, 0.3, 0.5], [0, 0, 1], [1, 1, 0]],
-            "output": [0.25, 0.375, 0.625],
-            "points": 10
+            "name": "update_weights_test_2",
+            "points": 10,
+            "input": {
+              "weights": [0.2, 0.3, 0.5],
+              "predictions": [1, 0, 1],
+              "labels": [0, 1, 0]
+            },
+            "expected_output": [0.2, 0.6, 1.0]
           }
         ]
       },
       "stacking_predictions": {
-        "cases": [
+        "type": "function",
+        "datasets": [
           {
-            "input": [[[0.8, 0.1], [0.6, 0.4], [0.7, 0.2]], "lambda x: 1 if sum(x) / len(x) > 0.5 else 0"],
-            "output": [1, 0],
-            "points": 10
+            "name": "stacking_predictions_test_1",
+            "points": 10,
+            "input": {
+              "predictions": [[0.8, 0.1], [0.6, 0.4], [0.7, 0.2]],
+              "meta_model": "lambda x: 1 if sum(x) / len(x) > 0.5 else 0"
+            },
+            "expected_output": [1, 0]
           },
           {
-            "input": [[[1, 0], [1, 1], [0, 0]], "lambda x: 1 if sum(x) > len(x) / 2 else 0"],
-            "output": [1, 0],
-            "points": 10
-          },
-          {
-            "input": [[[1, 0]], "lambda x: x[0]"],
-            "output": [1, 0],
-            "points": 10
+            "name": "stacking_predictions_test_2",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0], [1, 1], [0, 0]],
+              "meta_model": "lambda x: 1 if sum(x) > len(x) / 2 else 0"
+            },
+            "expected_output": [1, 0]
           }
         ]
       }
