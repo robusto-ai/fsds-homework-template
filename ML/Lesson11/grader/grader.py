@@ -1,7 +1,8 @@
 import json
+from pathlib import Path
+from typing import Dict, Any
 import importlib.util
 import sys
-from pathlib import Path
 import pandas as pd
 
 # Define test cases directly in the grader file
@@ -62,60 +63,124 @@ test_cases = {
     }
 }
 
-# Load student submission
-submission_path = Path('../assignments/homework.py')
-spec = importlib.util.spec_from_file_location("homework", submission_path)
-homework = importlib.util.module_from_spec(spec)
-sys.modules["homework"] = homework
-spec.loader.exec_module(homework)
+class MLGradingError(Exception):
+    pass
 
-def grade_assignment():
-    results = {
-        'total_score': 0,
-        'max_score': 0,
-        'feedback': []
-    }
+def grade_assignment(
+    submission_path: Path,
+    assignment_config: Dict[str, Any],
+    working_dir: Path
+) -> Dict[str, Any]:
+    """
+    Grade Machine Learning assignment submission
+    
+    Args:
+        submission_path: Path to directory containing all downloaded files
+        assignment_config: Configuration for grading (test_file, max_score)
+        working_dir: Path to working directory (same as submission_path in current setup)
+    
+    Returns:
+        Dict containing total_score, max_score, and detailed feedback
+    """
+    try:
+        # Import student's submission from the working directory
+        student_file = working_dir / 'homework.py'
+        spec = importlib.util.spec_from_file_location(
+            "student_submission",
+            student_file
+        )
+        student_module = importlib.util.module_from_spec(spec)
+        sys.modules["student_submission"] = student_module
+        spec.loader.exec_module(student_module)
+        
+        results = {
+            'total_score': 0,
+            'max_score': assignment_config['max_score'],
+            'feedback': [],
+            'status': 'COMPLETED'
+        }
 
-    for function_name, test_case in test_cases.items():
-        func = getattr(homework, function_name)
-        for dataset in test_case['datasets']:
-            input_data = dataset['input']
-            expected_output = dataset['expected_output']
-            points = dataset['points']
-            results['max_score'] += points
-
+        # Grade each function implementation
+        for function_name, test_case in test_cases.items():
             try:
-                if isinstance(input_data, dict):
-                    if function_name == "build_pipeline":
-                        data = pd.DataFrame(input_data['data'])
-                        pipeline = func()
-                        pipeline.fit(data[['age', 'gender', 'income']], data['target'])
-                        output = "pipeline"
-                    else:
-                        output = func(**input_data)
-                else:
-                    output = func(*input_data)
+                # Get function from student submission
+                func = getattr(student_module, function_name)
+                
+                # Test all datasets provided for this function
+                function_results = []
+                for dataset in test_case['datasets']:
+                    input_data = dataset['input']
+                    expected_output = dataset['expected_output']
+                    points = dataset['points']
 
-                assert output == expected_output, f"Expected {expected_output}, got {output}"
-                results['total_score'] += points
+                    try:
+                        if isinstance(input_data, dict):
+                            if function_name == "build_pipeline":
+                                data = pd.DataFrame(input_data['data'])
+                                pipeline = func()
+                                pipeline.fit(data[['age', 'gender', 'income']], data['target'])
+                                output = "pipeline"
+                            else:
+                                output = func(**input_data)
+                        else:
+                            output = func(*input_data)
+
+                        assert output == expected_output, f"Expected {expected_output}, got {output}"
+                        function_results.append({
+                            'dataset_name': dataset['name'],
+                            'status': 'PASS',
+                            'points': points,
+                            'max_points': points,
+                            'message': ''
+                        })
+                        results['total_score'] += points
+                    except Exception as e:
+                        function_results.append({
+                            'dataset_name': dataset['name'],
+                            'status': 'FAIL',
+                            'points': 0,
+                            'max_points': points,
+                            'message': str(e)
+                        })
+
                 results['feedback'].append({
                     'function': function_name,
-                    'status': 'PASS',
-                    'points': points,
-                    'max_points': points,
-                    'message': ''
+                    'status': 'PASS' if all(r['status'] == 'PASS' for r in function_results) else 'FAIL',
+                    'points': sum(r['points'] for r in function_results),
+                    'max_points': sum(r['max_points'] for r in function_results),
+                    'datasets': function_results
+                })
+                
+            except AttributeError:
+                results['feedback'].append({
+                    'function': function_name,
+                    'status': 'MISSING',
+                    'points': 0,
+                    'message': f'Function {function_name} not found in submission'
                 })
             except Exception as e:
                 results['feedback'].append({
                     'function': function_name,
-                    'status': 'FAIL',
+                    'status': 'ERROR',
                     'points': 0,
-                    'max_points': points,
                     'message': str(e)
                 })
 
-    return results
+        return results
+    except Exception as e:
+        return {
+            'total_score': 0,
+            'max_score': assignment_config['max_score'],
+            'feedback': [{'message': str(e)}],
+            'status': 'ERROR'
+        }
 
 if __name__ == "__main__":
-    results = grade_assignment()
+    submission_path = Path('../assignments/homework.py')
+    assignment_config = {
+        'test_file': 'grader.py',
+        'max_score': 100
+    }
+    working_dir = submission_path.parent
+    results = grade_assignment(submission_path, assignment_config, working_dir)
     print(json.dumps(results, indent=2))
