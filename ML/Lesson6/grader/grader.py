@@ -3,9 +3,60 @@ import importlib.util
 import sys
 from pathlib import Path
 
-# Load test cases
-with open('../assignments/test_cases.json') as f:
-    test_cases = json.load(f)
+# Define test cases directly in the grader file
+test_cases = {
+    "max_score": 100,
+    "euclidean_distance": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "euclidean_distance_test_1",
+                "points": 10,
+                "input": {
+                    "point1": [0, 0],
+                    "point2": [3, 4]
+                },
+                "expected_output": 5.0
+            },
+            {
+                "name": "euclidean_distance_test_2",
+                "points": 10,
+                "input": {
+                    "point1": [1, 2, 3],
+                    "point2": [4, 5, 6]
+                },
+                "expected_output": 5.196152422706632
+            }
+        ]
+    },
+    "knn_predict": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "knn_predict_test_1",
+                "points": 10,
+                "input": {
+                    "train_data": [[1, 2], [2, 3], [3, 4]],
+                    "train_labels": [0, 1, 0],
+                    "test_point": [2, 2],
+                    "k": 1
+                },
+                "expected_output": 0
+            },
+            {
+                "name": "knn_predict_test_2",
+                "points": 10,
+                "input": {
+                    "train_data": [[1, 2], [2, 3], [3, 4]],
+                    "train_labels": [0, 1, 0],
+                    "test_point": [2, 2],
+                    "k": 3
+                },
+                "expected_output": 0
+            }
+        ]
+    }
+}
 
 # Load student submission
 submission_path = Path('../assignments/homework.py')
@@ -14,14 +65,14 @@ homework = importlib.util.module_from_spec(spec)
 sys.modules["homework"] = homework
 spec.loader.exec_module(homework)
 
-def run_tests():
+def grade_assignment():
     results = {
         'total_score': 0,
         'max_score': 0,
         'feedback': []
     }
 
-    for function_name, test_case in test_cases['test_cases'].items():
+    for function_name, test_case in test_cases.items():
         func = getattr(homework, function_name)
         for dataset in test_case['datasets']:
             input_data = dataset['input']
@@ -56,5 +107,5 @@ def run_tests():
     return results
 
 if __name__ == "__main__":
-    results = run_tests()
+    results = grade_assignment()
     print(json.dumps(results, indent=2))

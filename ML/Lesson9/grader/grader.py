@@ -3,9 +3,79 @@ import importlib.util
 import sys
 from pathlib import Path
 
-# Load test cases
-with open('../assignments/test_cases.json') as f:
-    test_cases = json.load(f)
+# Define test cases directly in the grader file
+test_cases = {
+    "max_score": 100,
+    "bagging_aggregation": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "bagging_aggregation_test_1",
+                "points": 10,
+                "input": {
+                    "predictions": [[1, 0, 1], [1, 1, 1], [0, 0, 1]]
+                },
+                "expected_output": [1, 0, 1]
+            },
+            {
+                "name": "bagging_aggregation_test_2",
+                "points": 10,
+                "input": {
+                    "predictions": [[1, 0], [0, 1], [1, 0]]
+                },
+                "expected_output": [1, 0]
+            }
+        ]
+    },
+    "update_weights": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "update_weights_test_1",
+                "points": 10,
+                "input": {
+                    "weights": [0.2, 0.3, 0.5],
+                    "predictions": [1, 0, 1],
+                    "labels": [1, 0, 1]
+                },
+                "expected_output": [0.2, 0.3, 0.5]
+            },
+            {
+                "name": "update_weights_test_2",
+                "points": 10,
+                "input": {
+                    "weights": [0.2, 0.3, 0.5],
+                    "predictions": [1, 0, 1],
+                    "labels": [0, 1, 0]
+                },
+                "expected_output": [0.2, 0.6, 1.0]
+            }
+        ]
+    },
+    "stacking_predictions": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "stacking_predictions_test_1",
+                "points": 10,
+                "input": {
+                    "predictions": [[0.8, 0.1], [0.6, 0.4], [0.7, 0.2]],
+                    "meta_model": "lambda x: 1 if sum(x) / len(x) > 0.5 else 0"
+                },
+                "expected_output": [1, 0]
+            },
+            {
+                "name": "stacking_predictions_test_2",
+                "points": 10,
+                "input": {
+                    "predictions": [[1, 0], [1, 1], [0, 0]],
+                    "meta_model": "lambda x: 1 if sum(x) > len(x) / 2 else 0"
+                },
+                "expected_output": [1, 0]
+            }
+        ]
+    }
+}
 
 # Load student submission
 submission_path = Path('../assignments/homework.py')
@@ -14,14 +84,14 @@ homework = importlib.util.module_from_spec(spec)
 sys.modules["homework"] = homework
 spec.loader.exec_module(homework)
 
-def run_tests():
+def grade_assignment():
     results = {
         'total_score': 0,
         'max_score': 0,
         'feedback': []
     }
 
-    for function_name, test_case in test_cases['test_cases'].items():
+    for function_name, test_case in test_cases.items():
         func = getattr(homework, function_name)
         for dataset in test_case['datasets']:
             input_data = dataset['input']
@@ -59,5 +129,5 @@ def run_tests():
     return results
 
 if __name__ == "__main__":
-    results = run_tests()
+    results = grade_assignment()
     print(json.dumps(results, indent=2))

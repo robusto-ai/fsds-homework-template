@@ -4,9 +4,63 @@ import sys
 from pathlib import Path
 import pandas as pd
 
-# Load test cases
-with open('../assignments/test_cases.json') as f:
-    test_cases = json.load(f)
+# Define test cases directly in the grader file
+test_cases = {
+    "stratified_kfold": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "stratified_kfold_test_1",
+                "points": 10,
+                "input": {
+                    "data": [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]],
+                    "labels": [0, 1, 0, 1, 0],
+                    "k": 2
+                },
+                "expected_output": [
+                    ([2, 4], [0, 1, 3]),
+                    ([0, 1, 3], [2, 4])
+                ]
+            }
+        ]
+    },
+    "smote": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "smote_test_1",
+                "points": 10,
+                "input": {
+                    "data": [[1, 2], [3, 4], [5, 6], [7, 8]],
+                    "labels": [0, 1, 0, 1],
+                    "target_class": 0
+                },
+                "expected_output": (
+                    [[1, 2], [3, 4], [5, 6], [7, 8], [3, 4]],
+                    [0, 1, 0, 1, 0]
+                )
+            }
+        ]
+    },
+    "build_pipeline": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "build_pipeline_test_1",
+                "points": 10,
+                "input": {
+                    "data": {
+                        "age": [25, None, 30],
+                        "gender": ["M", "F", "M"],
+                        "income": [50000, 60000, None],
+                        "target": [1, 0, 1]
+                    }
+                },
+                "expected_output": "pipeline"
+            }
+        ]
+    }
+}
 
 # Load student submission
 submission_path = Path('../assignments/homework.py')
@@ -15,14 +69,14 @@ homework = importlib.util.module_from_spec(spec)
 sys.modules["homework"] = homework
 spec.loader.exec_module(homework)
 
-def run_tests():
+def grade_assignment():
     results = {
         'total_score': 0,
         'max_score': 0,
         'feedback': []
     }
 
-    for function_name, test_case in test_cases['test_cases'].items():
+    for function_name, test_case in test_cases.items():
         func = getattr(homework, function_name)
         for dataset in test_case['datasets']:
             input_data = dataset['input']
@@ -63,5 +117,5 @@ def run_tests():
     return results
 
 if __name__ == "__main__":
-    results = run_tests()
+    results = grade_assignment()
     print(json.dumps(results, indent=2))
