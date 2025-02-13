@@ -1,0 +1,55 @@
+{   
+    "max_score": 100,
+    "test_cases": {
+      "euclidean_distance": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "euclidean_distance_test_1",
+            "points": 10,
+            "input": {
+              "point1": [0, 0],
+              "point2": [3, 4]
+            },
+            "expected_output": 5.0
+          },
+          {
+            "name": "euclidean_distance_test_2",
+            "points": 10,
+            "input": {
+              "point1": [1, 2, 3],
+              "point2": [4, 5, 6]
+            },
+            "expected_output": 5.196152422706632
+          }
+        ]
+      },
+      "knn_predict": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "knn_predict_test_1",
+            "points": 10,
+            "input": {
+              "train_data": [[1, 2], [2, 3], [3, 4]],
+              "train_labels": [0, 1, 0],
+              "test_point": [2, 2],
+              "k": 1
+            },
+            "expected_output": 0
+          },
+          {
+            "name": "knn_predict_test_2",
+            "points": 10,
+            "input": {
+              "train_data": [[1, 2], [2, 3], [3, 4]],
+              "train_labels": [0, 1, 0],
+              "test_point": [2, 2],
+              "k": 3
+            },
+            "expected_output": 0
+          }
+        ]
+      }
+    }
+  }

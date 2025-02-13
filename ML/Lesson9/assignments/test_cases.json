@@ -1,0 +1,74 @@
+{
+    "max_score": 100,
+    "test_cases": {
+      "bagging_aggregation": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "bagging_aggregation_test_1",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0, 1], [1, 1, 1], [0, 0, 1]]
+            },
+            "expected_output": [1, 0, 1]
+          },
+          {
+            "name": "bagging_aggregation_test_2",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0], [0, 1], [1, 0]]
+            },
+            "expected_output": [1, 0]
+          }
+        ]
+      },
+      "update_weights": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "update_weights_test_1",
+            "points": 10,
+            "input": {
+              "weights": [0.2, 0.3, 0.5],
+              "predictions": [1, 0, 1],
+              "labels": [1, 0, 1]
+            },
+            "expected_output": [0.2, 0.3, 0.5]
+          },
+          {
+            "name": "update_weights_test_2",
+            "points": 10,
+            "input": {
+              "weights": [0.2, 0.3, 0.5],
+              "predictions": [1, 0, 1],
+              "labels": [0, 1, 0]
+            },
+            "expected_output": [0.2, 0.6, 1.0]
+          }
+        ]
+      },
+      "stacking_predictions": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "stacking_predictions_test_1",
+            "points": 10,
+            "input": {
+              "predictions": [[0.8, 0.1], [0.6, 0.4], [0.7, 0.2]],
+              "meta_model": "lambda x: 1 if sum(x) / len(x) > 0.5 else 0"
+            },
+            "expected_output": [1, 0]
+          },
+          {
+            "name": "stacking_predictions_test_2",
+            "points": 10,
+            "input": {
+              "predictions": [[1, 0], [1, 1], [0, 0]],
+              "meta_model": "lambda x: 1 if sum(x) > len(x) / 2 else 0"
+            },
+            "expected_output": [1, 0]
+          }
+        ]
+      }
+    }
+  }

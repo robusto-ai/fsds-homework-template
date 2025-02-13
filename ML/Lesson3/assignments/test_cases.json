@@ -1,0 +1,50 @@
+{
+    "max_score": 100,
+    "test_cases": {
+      "sigmoid": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "sigmoid_test_0",
+            "points": 10,
+            "input": [0],
+            "expected_output": 0.5
+          },
+          {
+            "name": "sigmoid_test_2",
+            "points": 10,
+            "input": [2],
+            "expected_output": 0.8807970779778823
+          }
+        ]
+      },
+      "binary_cross_entropy": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "binary_cross_entropy_test",
+            "points": 10,
+            "input": {
+              "y_true": [1, 0, 1],
+              "y_pred": [0.9, 0.1, 0.8]
+            },
+            "expected_output": 0.164252033486018
+          }
+        ]
+      },
+      "confusion_matrix": {
+        "type": "function",
+        "datasets": [
+          {
+            "name": "confusion_matrix_test",
+            "points": 10,
+            "input": {
+              "y_true": [1, 0, 1, 0],
+              "y_pred": [1, 0, 0, 1]
+            },
+            "expected_output": {"TP": 1, "TN": 1, "FP": 1, "FN": 1}
+          }
+        ]
+      }
+    }
+  }
