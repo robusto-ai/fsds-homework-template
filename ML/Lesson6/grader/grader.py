@@ -6,7 +6,6 @@ import sys
 
 # Define test cases directly in the grader file
 test_cases = {
-    "max_score": 100,
     "euclidean_distance": {
         "type": "function",
         "datasets": [
@@ -91,7 +90,7 @@ def grade_assignment(
         
         results = {
             'total_score': 0,
-            'max_score': assignment_config['max_score'],
+            'max_score': 0,
             'feedback': [],
             'status': 'COMPLETED'
         }
@@ -108,6 +107,7 @@ def grade_assignment(
                     input_data = dataset['input']
                     expected_output = dataset['expected_output']
                     points = dataset['points']
+                    results['max_score'] += points
 
                     try:
                         if isinstance(input_data, dict):
@@ -160,7 +160,7 @@ def grade_assignment(
     except Exception as e:
         return {
             'total_score': 0,
-            'max_score': assignment_config['max_score'],
+            'max_score': 0,
             'feedback': [{'message': str(e)}],
             'status': 'ERROR'
         }
