@@ -88,7 +88,7 @@ def grade_assignment(
     """
     try:
         # Import student's submission from the working directory
-        student_file = working_dir / 'implementation.py'
+        student_file = working_dir / 'homework.py'
         spec = importlib.util.spec_from_file_location(
             "student_submission",
             student_file
