@@ -1,5 +1,4 @@
 {
-    "max_score": 100,
     "test_cases": {
       "sigmoid": {
         "type": "function",
