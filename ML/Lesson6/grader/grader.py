@@ -11,7 +11,7 @@ test_cases = {
         "datasets": [
             {
                 "name": "euclidean_distance_test_1",
-                "points": 10,
+                "points": 5,
                 "input": {
                     "point1": [0, 0],
                     "point2": [3, 4]
@@ -20,12 +20,46 @@ test_cases = {
             },
             {
                 "name": "euclidean_distance_test_2",
-                "points": 10,
+                "points": 5,
                 "input": {
                     "point1": [1, 2, 3],
                     "point2": [4, 5, 6]
                 },
-                "expected_output": 5.196152422706632
+                "expected_output": 5.196
+            },
+            {
+                "name": "euclidean_distance_test_3",
+                "points": 5,
+                "input": {
+                    "point1": [1, 1],
+                    "point2": [1, 1]
+                },
+                "expected_output": 0.0
+            }
+        ]
+    },
+    "naive_bayes_predict": {
+        "type": "function",
+        "datasets": [
+            {
+                "name": "naive_bayes_predict_test_1",
+                "points": 10,
+                "input": {
+                    "priors": [0.5, 0.5],
+                    "likelihoods": [[0.8, 0.6], [0.4, 0.7]],
+                    "features": [1, 0]
+                },
+                "expected_output": 0
+            },
+            {
+                "name": "naive_bayes_predict_test_2",
+                "points": 10,
+                "input": {
+                    "priors": [0.3, 0.7],
+                    "likelihoods": [[0.9, 0.2], [0.3, 0.8]],
+                    "features": [1, 1]
+                },
+                "expected_output": 1
             }
         ]
     },
@@ -36,21 +70,21 @@ test_cases = {
                 "name": "knn_predict_test_1",
                 "points": 10,
                 "input": {
-                    "train_data": [[1, 2], [2, 3], [3, 4]],
-                    "train_labels": [0, 1, 0],
-                    "test_point": [2, 2],
-                    "k": 1
+                    "data": [[1, 1], [2, 2], [3, 3], [6, 6]],
+                    "labels": [0, 0, 1, 1],
+                    "query": [4, 4],
+                    "k": 3
                 },
-                "expected_output": 0
+                "expected_output": 1
             },
             {
                 "name": "knn_predict_test_2",
                 "points": 10,
                 "input": {
-                    "train_data": [[1, 2], [2, 3], [3, 4]],
-                    "train_labels": [0, 1, 0],
-                    "test_point": [2, 2],
-                    "k": 3
+                    "data": [[1, 1], [2, 2], [3, 3], [6, 6]],
+                    "labels": [0, 0, 1, 1],
+                    "query": [2, 2],
+                    "k": 1
                 },
                 "expected_output": 0
             }
