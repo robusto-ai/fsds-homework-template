@@ -1,51 +1,50 @@
 import pandas as pd
+from feast import Entity, FeatureView, FileSource, FeatureStore, ValueType, Feature
 from datetime import datetime, timedelta
-
-# Simulated Feast-like classes (for simplicity, no real Feast import needed)
-class Entity:
-    def __init__(self, name, join_keys):
-        self.name = name
-        self.join_keys = join_keys
-
-class Feature:
-    def __init__(self, name, dtype):
-        self.name = name
-        self.dtype = dtype
-
-class FeatureView:
-    def __init__(self, name, entities, features):
-        self.name = name
-        self.entities = entities
-        self.features = features
 
 # Exercise 1: Define Driver Features
 def define_driver_features():
     """
-    Define a driver entity and feature view for driver stats.
-    
+    Define a Feast entity and feature view for driver stats.
+
     Returns:
         tuple: (Entity, FeatureView) - The defined entity and feature view.
     """
-    # TODO: Define the "driver" entity with 'driver_id' as the join key
+    # TODO: Define the "driver" entity with driver_id as join key
     driver = None
 
-    # TODO: Define a FeatureView 'driver_stats' with feature 'performance_score' (float)
+    # TODO: Create a FileSource for 'data/driver_stats.parquet'
+    source = None
+
+    # TODO: Define a FeatureView 'driver_stats' with conv_rate and acc_rate
     stats_view = None
 
     return driver, stats_view
 
-# Exercise 2: Retrieve Historical Features
-def get_historical_features(entity_df, feature_store):
+# Exercise 2: Materialize Features
+def materialize_features():
     """
-    Retrieve historical features for the given entity DataFrame.
-    
+    Materialize features to the online store.
+
+    Raises:
+        Exception: If materialization fails.
+    """
+    # TODO: Initialize FeatureStore and materialize features
+    pass
+
+# Exercise 3: Retrieve Features for Prediction
+def predict_driver_performance(driver_id):
+    """
+    Retrieve online features for a driver_id and predict performance.
+
     Args:
-        entity_df (pd.DataFrame): DataFrame with 'driver_id' and 'event_timestamp'.
-        feature_store: Simulated FeatureStore object (provided by grader).
-    
+        driver_id (str): The driver identifier.
+
     Returns:
-        pd.DataFrame: Historical features including 'performance_score'.
+        dict: {'driver_id', 'conv_rate', 'acc_rate', 'performance'}
+
+    Raises:
+        ValueError: If features cannot be retrieved.
     """
-    # TODO: Use feature_store.get_historical_features to retrieve features
-    # Hint: Pass the entity_df and the feature view name 'driver_stats'
+    # TODO: Retrieve features and predict performance
     pass
